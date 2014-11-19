@@ -4,18 +4,18 @@ from django.db import models
 class Author(models.Model):
     """ Extend the User model w/ Author information. """
     user = models.OneToOneField(User)
-    website = models.CharField(max_length=100)
-    bio = models.CharField(max_length=500)
+    website = models.CharField(max_length=100, blank=True)
+    bio = models.CharField(max_length=500, blank=True)
 
 class Book(models.Model):
     """ A book contains everything. """
     title = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
 
 class Chapter(models.Model):
     """ A chapter is the fundamental container of content. """
     book = models.ForeignKey(Book)
     order = models.IntegerField(default=0)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, blank=True)
 
