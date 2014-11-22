@@ -23,7 +23,12 @@ SECRET_KEY = '(q+(gpe-#yk7-&y$n#)y$sd8a4%!exabxtm6&fp*wbz%by!y6z'
 DEBUG = True
 
 TEMPLATE_DEBUG = True
-
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, 'templates').replace('\\','/'),
+)
 ALLOWED_HOSTS = []
 
 # Application definition
