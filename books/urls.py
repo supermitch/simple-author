@@ -1,7 +1,9 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
+
+from books.views import IndexView
 
 urlpatterns = patterns('',
     # Examples:
-    #url(r'^$', 'author.views.home', name='home'),
+    url(r'^$', IndexView.as_view(), name='home'),
 )
+

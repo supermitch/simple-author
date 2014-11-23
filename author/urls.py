@@ -5,6 +5,6 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'author.views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^books/', include('books.urls')),
+    url(r'^', include('books.urls')),
     url(r'^accounts/', include('registration.backends.default.urls')),
 )

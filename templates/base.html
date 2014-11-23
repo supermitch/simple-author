@@ -1,10 +1,14 @@
-{% block title %}Simple Author - Register{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css" />
+    <title>{% block title %}Simple Author{% endblock %}</title>
+</head>
 
-
-<p>Base.html</p>
-
-{% block content %}
-<p>Content goes here.</p>
-
-{% endblock %}
+<body>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
 
