@@ -95,3 +95,11 @@ STATIC_URL = '/static/'
 ACCOUNT_ACTIVATION_DAYS = 2
 REGISTRATION_AUTO_LOGIN = False  # Default is False
 
+# Send email to the console instead of to the internet
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+try:
+    from local_settings import *
+except ImportError:
+    print('local_settings.py not imported')
+
