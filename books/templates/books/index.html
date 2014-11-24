@@ -8,10 +8,19 @@
 
 <h2>Writing, simply.<h2>
 
+{% if user.is_authenticated %}
+<p><a href="new/">New book</a></p>
+
+<h2>Existing books</h2>
+<ul>
+  <li></li>
+</ul>
+{% else %}
 <ol>
-    <li><a href="accounts/register/">Sign Up</a></li>
-    <li><a href="accounts/login/">Log In</a></li>
+  <li><a href="accounts/register/">Sign Up</a></li>
+  <li><a href="accounts/login/">Log In</a></li>
 </ol>
+{% endif %}
 
 {% endblock %}
 
