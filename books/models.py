@@ -7,12 +7,18 @@ class Author(models.Model):
     website = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
 
+    def __str__(self):
+        return self.user.username
+
 class Book(models.Model):
     """ A book contains everything. """
     author = models.ForeignKey(User)
     title = models.CharField(max_length=200)
     pub_date = models.DateField('date published', blank=True)
     description = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.title
 
 FRONT_MATTER_CHOICES = [
    #('db_value', 'human readable'),
@@ -48,10 +54,16 @@ class Section(models.Model):
     section_type = models.CharField(max_length=15, choices=SECTION_CHOICES)
     content = models.TextField(blank=True, default='')
 
+    def __str__(self):
+        return self.section_type
+
 class Chapter(models.Model):
     """ A chapter is the fundamental container of content. """
     book = models.ForeignKey(Book)
     order = models.IntegerField(default=0)
     name = models.CharField(max_length=200, blank=True, default='')
     content = models.TextField(blank=True, default='')
+
+    def __str__(self):
+        return self.name
 
