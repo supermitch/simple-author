@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
 
@@ -26,9 +28,14 @@ class NewBookView(View):
     def post(self, request):
         form = NewBookForm(request.POST)
         if form.is_valid():
-            # TODO: Create book record in DB
-            print('Successfully created a book.')
-            return redirect('edit_book', book_pk=1)
+            # TODO: ModelForm?
+            new_book = Book(user=request.user,
+                            title=form.cleaned_data['title'],
+                            url=form.cleaned_data['url'],
+                            privacy=form.cleaned_data['privacy'],
+                            pub_date=datetime.date.today())
+            new_book.save()
+            return redirect('edit_book', book_pk=new_book.id)
         else:
             context = {'form': form}
             return render(request, 'books/new_book.html', context)
