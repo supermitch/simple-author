@@ -2,25 +2,32 @@
 
 {% block title %}Index.html{% endblock %}
 
-{% block content%}
+{% block content %}
 
-<h1>Simple Author</h1>
+    <h1>Simple Author</h1>
 
-<h2>Writing, simply.<h2>
+    <h2>Writing, simply.<h2>
 
-{% if user.is_authenticated %}
-<p><a href="new/">New book</a></p>
+    {% if user.is_authenticated %}
+        <p>Logged in as Mitch LeBlanc.</p>
+        <p><a href="new/">New book</a></p>
 
-<h2>Existing books</h2>
-<ul>
-  <li></li>
-</ul>
-{% else %}
-<ol>
-  <li><a href="accounts/register/">Sign Up</a></li>
-  <li><a href="accounts/login/">Log In</a></li>
-</ol>
-{% endif %}
+        {% if books %}
+
+            <h2>Existing books</h2>
+            <ul>
+                {% for book in books %}
+                  <li><a href="{% url 'write_book' book.id %}">{{ book.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    {% else %}
+        <ol>
+          <li><a href="accounts/register/">Sign Up</a></li>
+          <li><a href="accounts/login/">Log In</a></li>
+        </ol>
+    {% endif %}
 
 {% endblock %}
 

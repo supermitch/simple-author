@@ -12,7 +12,7 @@ class Author(models.Model):
 
 class Book(models.Model):
     """ A book contains everything. """
-    author = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     title = models.CharField(max_length=200)
     pub_date = models.DateField('date published', blank=True)
     description = models.CharField(max_length=200, blank=True)

@@ -7,7 +7,7 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(books.models.Author, AuthorAdmin)
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'pub_date')
+    list_display = ('title', 'user', 'pub_date')
 admin.site.register(books.models.Book, BookAdmin)
 
 class SectionAdmin(admin.ModelAdmin):

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Write Book{% endblock %}
+
+{% block content%}
+
+<h1>Write Book</h1>
+
+<p>Write book: {{ book.title }}</p>
+
+<p><a href="{% url 'home' %}">Home</a></p>
+
+{% endblock %}
+
