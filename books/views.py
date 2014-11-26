@@ -19,6 +19,15 @@ class IndexView(View):
         context = {'books': books}
         return render(request, 'books/index.html', context)
 
+class ReadBookView(View):
+    """ Read the contents of a book. """
+    # TODO: books should be available at URL w/ slug instead of primary key
+    #       or both options?
+    def get(self, request, book_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        context = {'book': book}
+        return render(request, 'books/read_book.html', context)
+
 class NewBookView(View):
     """ Page with a form to create a new book. """
     def get(self, request):

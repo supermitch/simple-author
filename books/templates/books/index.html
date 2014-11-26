@@ -17,7 +17,9 @@
             <h2>Existing books</h2>
             <ul>
                 {% for book in books %}
-                  <li><a href="{% url 'write_book' book.id %}">{{ book.title }}</a></li>
+                  <li><a href="{% url 'read_book' book.id %}">{{ book.title }}</a> --
+                      <a href="{% url 'edit_book' book.id %}">edit layout</a> |
+                      <a href="{% url 'write_book' book.id %}">edit content</a></li>
                 {% endfor %}
             </ul>
         {% endif %}
