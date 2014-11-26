@@ -15,8 +15,11 @@ from books.forms import NewBookForm
 class IndexView(View):
     """ Home page. """
     def get(self, request):
-        books = Book.objects.filter(user=request.user)
-        context = {'books': books}
+        if request.user.is_authenticated():
+            books = Book.objects.filter(user=request.user)
+            context = {'books': books}
+        else:
+            context = {}
         return render(request, 'books/index.html', context)
 
 class ReadBookView(View):
