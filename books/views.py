@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 # Create your views here.
 
-from books.models import Book
+from books.models import Book, Chapter, Section
 
 from books.forms import NewBookForm
 
@@ -28,7 +28,13 @@ class ReadBookView(View):
     #       or both options?
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        context = {'book': book}
+        sections = Section.objects.filter(book=book)
+        chapters = Chapter.objects.filter(book=book)
+        context = {
+            'book': book,
+            'chapters': chapters,
+            'sections': sections,
+        }
         return render(request, 'books/read_book.html', context)
 
 class NewBookView(View):

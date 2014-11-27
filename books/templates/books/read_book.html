@@ -7,6 +7,19 @@
 <h1>{{ book.title }}</h1>
 
 <p>Reading book: {{ book.pk }}</p>
+<hr>
+
+{% for section in sections %}
+    <p>{{ section.section_type }}</p>
+    <p>{{ section.content }}</p>
+    <hr>
+{% endfor %}
+
+{% for chapter in chapters %}
+    <p>{{ chapter.name }}</p>
+    <p>{{ chapter.content }}</p>
+    <hr>
+{% endfor %}
 
 <p><a href="{% url 'home' %}">Home</a></p>
 
