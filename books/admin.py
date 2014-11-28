@@ -11,7 +11,7 @@ class BookAdmin(admin.ModelAdmin):
 admin.site.register(books.models.Book, BookAdmin)
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('section_type', 'book')
+    list_display = ('name', 'order', 'location')
 admin.site.register(books.models.Section, SectionAdmin)
 
 class ChapterAdmin(admin.ModelAdmin):

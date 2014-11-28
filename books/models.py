@@ -59,12 +59,22 @@ BACK_MATTER_CHOICES = [
 SECTION_CHOICES = FRONT_MATTER_CHOICES + BACK_MATTER_CHOICES
 
 class Section(models.Model):
-    book = models.ForeignKey(Book)
-    section_type = models.CharField(max_length=15, choices=SECTION_CHOICES)
-    content = models.TextField(blank=True, default='')
+    """ Back and Front matter are stored here. """
+    name = models.CharField(max_length=15, choices=SECTION_CHOICES)
+    LOCATION_CHOICES = (('front', 'Front'), ('back', 'Back'))
+    order = models.IntegerField(default=0)
+    location = models.CharField(max_length=5, choices=LOCATION_CHOICES)
 
     def __str__(self):
-        return self.section_type
+        return self.name
+
+
+class BookSections(models.Model):
+    """ Links Sections to Books. """
+    book = models.ForeignKey(Book)
+    section = models.ForeignKey(Section)
+    content = models.TextField(blank=True, default='')
+
 
 class Chapter(models.Model):
     """ A chapter is the fundamental container of content. """
