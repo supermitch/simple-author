@@ -8,6 +8,48 @@
 
 <p>Editing book: {{ book.pk }} {{ book.title }}</p>
 
+<hr>
+
+<p>Front matter</p>
+{% if sections %}
+        <ul>
+    {% for section in sections %}
+            <li>{{ section.section_type }} - Edit - Write</li>
+    {% endfor %}
+        </ul>
+{% else %}
+    <p>No front matter</p>
+    <p><a href="{{ book.pk }}/add/section/">Add front matter</a></p>
+{% endif %}
+
+<hr>
+
+<p>Chapters</p>
+{% if chapters %}
+        <ul>
+    {% for chapter in chapters %}
+            <li>{{ chapter.order }}. {{ chapter.name }} - Edit - Write</li>
+    {% endfor %}
+        </ul>
+{% else %}
+    <p>No chapters</p>
+    <p><a href="{% url 'new_chapter' book.pk %}">Add Chapter</a></p>
+{% endif %}
+
+<hr>
+
+<p>Back matter</p>
+{% if sections %}
+        <ul>
+    {% for section in sections %}
+            <li>{{ section.section_type }} - Edit - Write</li>
+    {% endfor %}
+        </ul>
+{% else %}
+    <p>No back matter</p>
+    <p><a href="{{ book.pk }}/add/section/">Add front matter</a></p>
+{% endif %}
+
 <p><a href="{% url 'home' %}">Home</a></p>
 
 {% endblock %}

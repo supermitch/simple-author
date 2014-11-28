@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Add Chapter{% endblock %}
+
+{% block content%}
+
+<h1>Add Chapter</h1>
+
+<p>Editing book: {{ book.pk }} {{ book.title }}</p>
+
+<form action="{% url 'new_chapter' book.pk %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Add Chapter" />
+</form>
+
+
+<p><a href="{% url 'home' %}">Home</a></p>
+
+{% endblock %}
+
