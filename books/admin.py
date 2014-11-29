@@ -11,11 +11,14 @@ class BookAdmin(admin.ModelAdmin):
 admin.site.register(books.models.Book, BookAdmin)
 
 class SectionAdmin(admin.ModelAdmin):
+    list_filter = ['location']
     list_display = ('name', 'order', 'location')
+    ordering = ['-location', 'order']
 admin.site.register(books.models.Section, SectionAdmin)
 
 class ChapterAdmin(admin.ModelAdmin):
     list_display = ('name', 'book', 'order')
+    ordering = ['book', 'order', 'name']
 admin.site.register(books.models.Chapter, ChapterAdmin)
 
 
