@@ -11,16 +11,12 @@
 <hr>
 
 <p>Front matter</p>
-{% if sections %}
-        <ul>
-    {% for section in sections %}
-            <li>{{ section.section_type }} - Edit - Write</li>
-    {% endfor %}
-        </ul>
-{% else %}
-    <p>No front matter</p>
-    <p><a href="{{ book.pk }}/add/section/">Add front matter</a></p>
-{% endif %}
+
+<form action="{% url 'edit_book' book.pk %}" method="post">
+    {% csrf_token %}
+    {{ front_form }}
+    <input type="submit" value="Update Front Matter" />
+</form>
 
 <hr>
 
@@ -39,16 +35,14 @@
 <hr>
 
 <p>Back matter</p>
-{% if sections %}
-        <ul>
-    {% for section in sections %}
-            <li>{{ section.section_type }} - Edit - Write</li>
-    {% endfor %}
-        </ul>
-{% else %}
-    <p>No back matter</p>
-    <p><a href="{{ book.pk }}/add/section/">Add front matter</a></p>
-{% endif %}
+
+<p>Front matter</p>
+
+<form action="{% url 'edit_book' book.pk %}" method="post">
+    {% csrf_token %}
+    {{ back_form }}
+    <input type="submit" value="Update Back Matter" />
+</form>
 
 <p><a href="{% url 'home' %}">Home</a></p>
 

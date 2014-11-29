@@ -18,3 +18,13 @@ class NewChapterForm(forms.ModelForm):
         fields = ['book', 'name', 'order']
         widgets = {'book': forms.HiddenInput()}
 
+class SelectFrontMatterForm(forms.Form):
+    sections = forms.MultipleChoiceField(required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=models.FRONT_MATTER_CHOICES)
+
+class SelectBackMatterForm(forms.Form):
+    sections = forms.MultipleChoiceField(required=False,
+        widget=forms.CheckboxSelectMultiple,
+        choices=models.BACK_MATTER_CHOICES)
+

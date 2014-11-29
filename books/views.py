@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
 
+import books.forms
 from books.forms import NewBookForm, NewChapterForm
 from books.models import Book, Chapter, Section
 
@@ -25,12 +26,12 @@ class ReadBookView(View):
     #       or both options?
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        sections = Section.objects.filter(book=book)
+        #sections = Section.objects.filter(book=book)
         chapters = Chapter.objects.filter(book=book)
         context = {
             'book': book,
             'chapters': chapters,
-            'sections': sections,
+        #    'sections': sections,
         }
         return render(request, 'books/read_book.html', context)
 
@@ -84,14 +85,46 @@ class NewChapterView(View):
             context = {'book': book, 'form': chapter}
             return renter(request, 'books/new_chapter.html', context)
 
+class NewSectionView(View):
+    def get(self, request, book_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        # Find our current max order value
+        max_order = Chapter.objects.filter(book_id=book_pk).aggregate(Max('order'))
+
+        max_order = 0 if max_order.values()[0] is None else max_order.values()[0]
+        new_order = max_order + 1
+        new_chapter = Chapter(book_id=book_pk, order=new_order, name=new_name)
+        form = NewChapterForm(instance=new_chapter)
+
+        context = {'book': book, 'form': form}
+        return render(request, 'books/new_section.html', context)
+
+    def post(self, request, book_pk):
+        chapter = NewChapterForm(request.POST)
+        if chapter.is_valid():
+            chapter.save()  # Create new chapter
+            # TODO: set new order?
+            return redirect('new_chapter', book_pk=book_pk)
+        else:
+            context = {'book': book, 'form': chapter}
+            return renter(request, 'books/new_section.html', context)
+
 
 class EditBookView(View):
     """ Modify a book's settings and layout, but not content. """
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        sections = Section.objects.filter(book=book)
+        #sections = Section.objects.filter(book=book)
         chapters = Chapter.objects.filter(book=book).order_by('order')
-        context = {'book': book, 'sections': sections, 'chapters': chapters}
+
+        front_form = books.forms.SelectFrontMatterForm()
+        back_form = books.forms.SelectBackMatterForm()
+
+        context = {'book': book,
+            'chapters': chapters,
+            'front_form': front_form,
+            'back_form': back_form,
+        }
 
         return render(request, 'books/edit_book.html', context)
 
