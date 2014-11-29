@@ -75,6 +75,9 @@ class BookSections(models.Model):
     section = models.ForeignKey(Section)
     content = models.TextField(blank=True, default='')
 
+    class Meta:
+        unique_together = ('book', 'section')
+        verbose_name_plural = 'Book Sections'
 
 class Chapter(models.Model):
     """ A chapter is the fundamental container of content. """

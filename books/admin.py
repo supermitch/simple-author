@@ -10,6 +10,11 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'pub_date')
 admin.site.register(books.models.Book, BookAdmin)
 
+class BookSectionsAdmin(admin.ModelAdmin):
+    list_display = ('book', 'section', 'content')
+    ordering = ['book', 'section']
+admin.site.register(books.models.BookSections, BookSectionsAdmin)
+
 class SectionAdmin(admin.ModelAdmin):
     list_filter = ['location']
     list_display = ('name', 'order', 'location')
