@@ -18,13 +18,19 @@ class NewChapterForm(forms.ModelForm):
         fields = ['book', 'name', 'order']
         widgets = {'book': forms.HiddenInput()}
 
+def verify_sections(CheckBoxInput):
+    print(CheckBoxInput)
+    return True
+
 class SelectFrontMatterForm(forms.Form):
     sections = forms.MultipleChoiceField(required=False,
         widget=forms.CheckboxSelectMultiple,
-        choices=models.FRONT_MATTER_CHOICES)
+        choices=models.FRONT_MATTER_CHOICES,
+        label='Front Matter')
 
 class SelectBackMatterForm(forms.Form):
     sections = forms.MultipleChoiceField(required=False,
         widget=forms.CheckboxSelectMultiple,
-        choices=models.BACK_MATTER_CHOICES)
+        choices=models.BACK_MATTER_CHOICES,
+        label='Back Matter')
 

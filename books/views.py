@@ -8,6 +8,7 @@ from django.views.generic import TemplateView, View
 
 import books.forms
 from books.forms import NewBookForm, NewChapterForm
+import books.models
 from books.models import Book, Chapter, Section
 
 class IndexView(View):
@@ -117,8 +118,17 @@ class EditBookView(View):
         #sections = Section.objects.filter(book=book)
         chapters = Chapter.objects.filter(book=book).order_by('order')
 
-        front_form = books.forms.SelectFrontMatterForm()
-        back_form = books.forms.SelectBackMatterForm()
+        book_matter = Section.objects.filter(booksections__book=book)
+
+        initial_front_matter = [section.name for section in book_matter \
+                                if section.location == 'front']
+        front_form = books.forms.SelectFrontMatterForm(
+            initial={'sections': initial_front_matter})
+
+        initial_back_matter = [section.name for section in book_matter \
+                               if section.location == 'back']
+        back_form = books.forms.SelectBackMatterForm(
+            initial={'sections': initial_back_matter})
 
         context = {'book': book,
             'chapters': chapters,

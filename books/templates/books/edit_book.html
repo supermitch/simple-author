@@ -10,8 +10,6 @@
 
 <hr>
 
-<p>Front matter</p>
-
 <form action="{% url 'edit_book' book.pk %}" method="post">
     {% csrf_token %}
     {{ front_form }}
@@ -33,10 +31,6 @@
 {% endif %}
 
 <hr>
-
-<p>Back matter</p>
-
-<p>Front matter</p>
 
 <form action="{% url 'edit_book' book.pk %}" method="post">
     {% csrf_token %}
