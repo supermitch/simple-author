@@ -7,12 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('books', '0011_auto_20141130_2330'),
+        ('books', 'sections_data_migration'),
     ]
 
     operations = [
-        migrations.RemoveField(
+        migrations.AddField(
             model_name='book',
             name='sections',
+            field=models.ManyToManyField(to='books.Section', through='books.BookSections'),
+            preserve_default=True,
         ),
     ]

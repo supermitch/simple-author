@@ -52,7 +52,7 @@ def remove_sections(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('books', '0008_auto_20141127_1657'),
+        ('books', '0001_initial'),
     ]
 
     operations = [

@@ -64,7 +64,7 @@ class Book(models.Model):
                                default=PUBLIC)
     pub_date = models.DateField('date published', blank=True)
     description = models.CharField(max_length=200, blank=True)
-    #sections = models.ManyToManyField(Section, through='BookSections')
+    sections = models.ManyToManyField(Section, through='BookSections')
 
     def __str__(self):
         return self.title

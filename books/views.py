@@ -9,7 +9,7 @@ from django.views.generic import TemplateView, View
 import books.forms
 from books.forms import NewBookForm, NewChapterForm
 import books.models
-from books.models import Book, Chapter, Section
+from books.models import Book, Chapter, Section, BookSections
 
 class IndexView(View):
     """ Home page. """
@@ -89,12 +89,29 @@ class NewChapterView(View):
 
 class EditBookView(View):
     """ Modify a book's settings and layout, but not content. """
+
+    def add_checked(self, book, location, submitted_section_names):
+        """ Add a relationship for check sections. """
+        for section_name in submitted_section_names:
+            section = Section.objects.get(name=section_name, location=location)
+            if section not in book.sections.all():  # Don't re-add
+                book_sect = BookSections(book=book, section=section)
+                book_sect.save()
+
+    def clear_unchecked(self, book, location, submitted_section_names):
+        """ Remove any sections that were unchecked. """
+        current_sections = Section.objects.filter(book=book, location=location)
+        for section in current_sections:
+            if section.name not in submitted_section_names:
+                book_sect = BookSections.objects.get(book=book,
+                                                     section=section)
+                book_sect.delete()  # TODO: Hide only?
+
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        #sections = Section.objects.filter(book=book)
         chapters = Chapter.objects.filter(book=book).order_by('order')
 
-        book_matter = Section.objects.filter(booksections__book=book)
+        book_matter = book.sections.all()
 
         initial_front_matter = [section.name for section in book_matter \
                                 if section.location == 'front']
@@ -115,18 +132,25 @@ class EditBookView(View):
         return render(request, 'books/edit_book.html', context)
 
     def post(self, request, book_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+
         front_matter_form = books.forms.SelectFrontMatterForm(request.POST)
         back_matter_form = books.forms.SelectBackMatterForm(request.POST)
+
         if front_matter_form.is_valid():
-            for section in front_matter_form.cleaned_data['sections']:
-                pass
-            print('Front matter submitted')
-            # TODO: set new order?
-            print(front_matter_form.cleaned_data)
+            location = 'front'
+            submitted_section_names = front_matter_form.cleaned_data['sections']
+            self.clear_unchecked(book, location, submitted_section_names)
+            self.add_checked(book, location, submitted_section_names)
+
             return redirect('edit_book', book_pk=book_pk)
+
         elif back_matter_form.is_valid():
-            print('Back matter submitted')
-            # TODO: set new order?
+            location = 'back'
+            submitted_section_names = back_matter_form.cleaned_data['sections']
+            self.clear_unchecked(book, location, submitted_section_names)
+            self.add_checked(book, location, submitted_section_names)
+
             return redirect('edit_book', book_pk=book_pk)
         else:
             context = {'book': book}

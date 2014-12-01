@@ -6,7 +6,10 @@
 
 <h1>Edit Book</h1>
 
-<p>Editing book: {{ book.pk }} {{ book.title }}</p>
+<p>Editing book {{ book.pk }}: <strong>{{ book.title }}</strong>
+- <a href="{% url 'read_book' book.pk %}">Read</a>
+- <a href="{% url 'write_book' book.pk %}">Write</a>
+</p>
 
 <hr>
 
