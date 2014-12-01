@@ -4,21 +4,32 @@
 
 {% block content%}
 
+<p><a href="{% url 'home' %}">Home</a></p>
+
 <h1>{{ book.title }}</h1>
 
-<p>Reading book: {{ book.pk }}</p>
 <hr>
 
-{% for section in sections %}
-    <p>{{ section.section_type }}</p>
-    <p>{{ section.content }}</p>
-    <hr>
+{% for book_section in sections %}
+    {% if book_section.section.location == 'front' %}
+        <p><em>{{ book_section.section.name }}</em></p>
+        <p>{{ book_section.content }}</p>
+        <hr>
+    {% endif %}
 {% endfor %}
 
 {% for chapter in chapters %}
-    <p>{{ chapter.name }}</p>
+    <p><em>{{ chapter.name }}</em></p>
     <p>{{ chapter.content }}</p>
     <hr>
+{% endfor %}
+
+{% for book_section in sections %}
+    {% if book_section.section.location == 'back' %}
+        <p><em>{{ book_section.section.name }}</em></p>
+        <p>{{ book_section.content }}</p>
+        <hr>
+    {% endif %}
 {% endfor %}
 
 <p><a href="{% url 'home' %}">Home</a></p>

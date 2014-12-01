@@ -4,11 +4,55 @@
 
 {% block content%}
 
-<h1>Write Book</h1>
-
-<p>Write book: {{ book.pk }} {{ book.title }}</p>
-
 <p><a href="{% url 'home' %}">Home</a></p>
 
+<h1>Write Book</h1>
+
+<p>Writing <strong>{{ book.title }}</strong>
+- <a href="{% url 'edit_book' book.pk %}">Layout</a>
+- <a href="{% url 'read_book' book.pk %}">Read</a>
+</p>
+
+<hr>
+
+<h2>Front Matter</h2>
+
+{% if sections %}
+    {% for section in sections %}
+        {% if section.location = 'front' %}
+            <p>{{ section.name }}</p>
+            <p>{{ section.content }}</p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<hr>
+
+<h2>Chapters</h2>
+{% if chapters %}
+    {% for chapter in chapters %}
+    <div class="chapter">
+        <p>{{ chapter.order }}. {{ chapter.name }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No chapters</p>
+    <p><a href="{% url 'new_chapter' book.pk %}">Add Chapter</a></p>
+{% endif %}
+
+<hr>
+
+<h2>Back Matter</h2>
+
+{% if sections %}
+    {% for section in sections %}
+        {% if section.location = 'back' %}
+            <p>{{ section.name }}</p>
+            <p>{{ section.content }}</p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<p><a href="{% url 'home' %}">Home</a></p>
 {% endblock %}
 

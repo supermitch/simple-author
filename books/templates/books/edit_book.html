@@ -6,7 +6,7 @@
 
 <h1>Edit Book</h1>
 
-<p>Editing book {{ book.pk }}: <strong>{{ book.title }}</strong>
+<p>Editing <strong>{{ book.title }}</strong>
 - <a href="{% url 'read_book' book.pk %}">Read</a>
 - <a href="{% url 'write_book' book.pk %}">Write</a>
 </p>
@@ -21,7 +21,7 @@
 
 <hr>
 
-<p>Chapters</p>
+<h2>Chapters</h2>
 {% if chapters %}
         <ul>
     {% for chapter in chapters %}

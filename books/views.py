@@ -27,12 +27,13 @@ class ReadBookView(View):
     #       or both options?
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        #sections = Section.objects.filter(book=book)
-        chapters = Chapter.objects.filter(book=book)
+        sections = Section.objects.filter(book=book)
+        sections = BookSections.objects.filter(book=book)
+        chapters = Chapter.objects.filter(book=book).order_by('order')
         context = {
             'book': book,
             'chapters': chapters,
-        #    'sections': sections,
+            'sections': sections,
         }
         return render(request, 'books/read_book.html', context)
 
@@ -90,23 +91,6 @@ class NewChapterView(View):
 class EditBookView(View):
     """ Modify a book's settings and layout, but not content. """
 
-    def add_checked(self, book, location, submitted_section_names):
-        """ Add a relationship for check sections. """
-        for section_name in submitted_section_names:
-            section = Section.objects.get(name=section_name, location=location)
-            if section not in book.sections.all():  # Don't re-add
-                book_sect = BookSections(book=book, section=section)
-                book_sect.save()
-
-    def clear_unchecked(self, book, location, submitted_section_names):
-        """ Remove any sections that were unchecked. """
-        current_sections = Section.objects.filter(book=book, location=location)
-        for section in current_sections:
-            if section.name not in submitted_section_names:
-                book_sect = BookSections.objects.get(book=book,
-                                                     section=section)
-                book_sect.delete()  # TODO: Hide only?
-
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
         chapters = Chapter.objects.filter(book=book).order_by('order')
@@ -131,6 +115,23 @@ class EditBookView(View):
 
         return render(request, 'books/edit_book.html', context)
 
+    def add_checked(self, book, location, submitted_section_names):
+        """ Add a relationship for check sections. """
+        for section_name in submitted_section_names:
+            section = Section.objects.get(name=section_name, location=location)
+            if section not in book.sections.all():  # Don't re-add
+                book_sect = BookSections(book=book, section=section)
+                book_sect.save()
+
+    def clear_unchecked(self, book, location, submitted_section_names):
+        """ Remove any sections that were unchecked. """
+        current_sections = Section.objects.filter(book=book, location=location)
+        for section in current_sections:
+            if section.name not in submitted_section_names:
+                book_sect = BookSections.objects.get(book=book,
+                                                     section=section)
+                book_sect.delete()  # TODO: Hide only?
+
     def post(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
 
@@ -139,17 +140,17 @@ class EditBookView(View):
 
         if front_matter_form.is_valid():
             location = 'front'
-            submitted_section_names = front_matter_form.cleaned_data['sections']
-            self.clear_unchecked(book, location, submitted_section_names)
-            self.add_checked(book, location, submitted_section_names)
+            submitted_sections = front_matter_form.cleaned_data['sections']
+            self.clear_unchecked(book, location, submitted_sections)
+            self.add_checked(book, location, submitted_sections)
 
             return redirect('edit_book', book_pk=book_pk)
 
         elif back_matter_form.is_valid():
             location = 'back'
-            submitted_section_names = back_matter_form.cleaned_data['sections']
-            self.clear_unchecked(book, location, submitted_section_names)
-            self.add_checked(book, location, submitted_section_names)
+            submitted_sections = back_matter_form.cleaned_data['sections']
+            self.clear_unchecked(book, location, submitted_sections)
+            self.add_checked(book, location, submitted_sections)
 
             return redirect('edit_book', book_pk=book_pk)
         else:
@@ -165,7 +166,9 @@ class WriteBookView(View):
     """ Modify a book's contents. """
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        context = {'book': book}
+        chapters = Chapter.objects.filter(book=book).order_by('order')
+        sections = book.sections.all()
+        context = {'book': book, 'chapters': chapters, 'sections': sections}
         return render(request, 'books/write_book.html', context)
 
     @method_decorator(login_required)

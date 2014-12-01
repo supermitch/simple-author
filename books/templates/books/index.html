@@ -6,21 +6,26 @@
 
     <h1>Simple Author</h1>
 
-    <h2>Writing, simply.<h2>
+    <h2>Writing, simply.</h2>
 
     {% if user.is_authenticated %}
         <p>Logged in as Mitch LeBlanc.</p>
         <p><a href="{% url 'auth_logout' %}">Logout</a></p>
-        <p><a href="new/">New book</a></p>
+
+        <hr>
+
+        <p><a href="new/">Add New Book</a></p>
 
         {% if books %}
 
-            <h2>Existing books</h2>
+            <h3>Your Books</h3>
             <ul>
                 {% for book in books %}
-                  <li><a href="{% url 'read_book' book.id %}">{{ book.title }}</a> --
-                      <a href="{% url 'edit_book' book.id %}">edit layout</a> |
-                      <a href="{% url 'write_book' book.id %}">edit content</a></li>
+                    <li><strong>{{ book.title }}</strong>
+                      - <a href="{% url 'edit_book' book.id %}">Layout</a>
+                      - <a href="{% url 'write_book' book.id %}">Write</a>
+                      - <a href="{% url 'read_book' book.id %}">Read</a>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}
