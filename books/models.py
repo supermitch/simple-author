@@ -10,25 +10,6 @@ class Author(models.Model):
     def __str__(self):
         return self.user.username
 
-class Book(models.Model):
-    """ A book contains everything. """
-    PRIVATE = 'private'
-    PUBLIC = 'public'
-    PRIVACY_CHOICES = (
-        (PRIVATE, 'Private'),
-        (PUBLIC, 'Public'),
-    )
-    user = models.ForeignKey(User)
-    title = models.CharField(max_length=200)
-    url = models.SlugField(blank=True, null=True)
-    privacy = models.CharField(max_length=10, choices=PRIVACY_CHOICES,
-                               default=PUBLIC)
-    pub_date = models.DateField('date published', blank=True)
-    description = models.CharField(max_length=200, blank=True)
-
-    def __str__(self):
-        return self.title
-
 FRONT_MATTER_CHOICES = [
    #('db_value', 'human readable'),
     ('half_title', 'Half title'),
@@ -68,6 +49,25 @@ class Section(models.Model):
     def __str__(self):
         return self.name
 
+class Book(models.Model):
+    """ A book contains everything. """
+    PRIVATE = 'private'
+    PUBLIC = 'public'
+    PRIVACY_CHOICES = (
+        (PRIVATE, 'Private'),
+        (PUBLIC, 'Public'),
+    )
+    user = models.ForeignKey(User)
+    title = models.CharField(max_length=200)
+    url = models.SlugField(blank=True, null=True)
+    privacy = models.CharField(max_length=10, choices=PRIVACY_CHOICES,
+                               default=PUBLIC)
+    pub_date = models.DateField('date published', blank=True)
+    description = models.CharField(max_length=200, blank=True)
+    #sections = models.ManyToManyField(Section, through='BookSections')
+
+    def __str__(self):
+        return self.title
 
 class BookSections(models.Model):
     """ Links Sections to Books. """

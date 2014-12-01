@@ -86,30 +86,6 @@ class NewChapterView(View):
             context = {'book': book, 'form': chapter}
             return renter(request, 'books/new_chapter.html', context)
 
-class NewSectionView(View):
-    def get(self, request, book_pk):
-        book = get_object_or_404(Book, pk=book_pk)
-        # Find our current max order value
-        max_order = Chapter.objects.filter(book_id=book_pk).aggregate(Max('order'))
-
-        max_order = 0 if max_order.values()[0] is None else max_order.values()[0]
-        new_order = max_order + 1
-        new_chapter = Chapter(book_id=book_pk, order=new_order, name=new_name)
-        form = NewChapterForm(instance=new_chapter)
-
-        context = {'book': book, 'form': form}
-        return render(request, 'books/new_section.html', context)
-
-    def post(self, request, book_pk):
-        chapter = NewChapterForm(request.POST)
-        if chapter.is_valid():
-            chapter.save()  # Create new chapter
-            # TODO: set new order?
-            return redirect('new_chapter', book_pk=book_pk)
-        else:
-            context = {'book': book, 'form': chapter}
-            return renter(request, 'books/new_section.html', context)
-
 
 class EditBookView(View):
     """ Modify a book's settings and layout, but not content. """
@@ -137,6 +113,25 @@ class EditBookView(View):
         }
 
         return render(request, 'books/edit_book.html', context)
+
+    def post(self, request, book_pk):
+        front_matter_form = books.forms.SelectFrontMatterForm(request.POST)
+        back_matter_form = books.forms.SelectBackMatterForm(request.POST)
+        if front_matter_form.is_valid():
+            for section in front_matter_form.cleaned_data['sections']:
+                pass
+            print('Front matter submitted')
+            # TODO: set new order?
+            print(front_matter_form.cleaned_data)
+            return redirect('edit_book', book_pk=book_pk)
+        elif back_matter_form.is_valid():
+            print('Back matter submitted')
+            # TODO: set new order?
+            return redirect('edit_book', book_pk=book_pk)
+        else:
+            context = {'book': book}
+            return renter(request, 'books/edit_book.html', context)
+
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
