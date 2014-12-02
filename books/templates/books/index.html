@@ -9,32 +9,22 @@
     <h2>Writing, simply.</h2>
 
     {% if user.is_authenticated %}
-        <p>Logged in as Mitch LeBlanc.</p>
-        <p><a href="{% url 'auth_logout' %}">Logout</a></p>
 
-        <hr>
-
-        <p><a href="new/">Add New Book</a></p>
+    <p><a href="new/">Add New Book</a></p>
 
         {% if books %}
 
-            <h3>Your Books</h3>
-            <ul>
-                {% for book in books %}
-                    <li><strong>{{ book.title }}</strong>
-                      - <a href="{% url 'edit_book' book.id %}">Layout</a>
-                      - <a href="{% url 'write_book' book.id %}">Write</a>
-                      - <a href="{% url 'read_book' book.id %}">Read</a>
-                    </li>
-                {% endfor %}
-            </ul>
+        <h3>Your Books</h3>
+        <ul>
+            {% for book in books %}
+                <li><strong>{{ book.title }}</strong>
+                  - <a href="{% url 'edit_book' book.id %}">Layout</a>
+                  - <a href="{% url 'write_book' book.id %}">Write</a>
+                  - <a href="{% url 'read_book' book.id %}">Read</a>
+                </li>
+            {% endfor %}
+        </ul>
         {% endif %}
-
-    {% else %}
-        <ol>
-          <li><a href="accounts/register/">Sign Up</a></li>
-          <li><a href="{% url 'auth_login' %}">Log In</a></li>
-        </ol>
     {% endif %}
 
 {% endblock %}
