@@ -8,8 +8,15 @@ from books.models import Author
 
 class ProfileView(View):
     """ Display a profile defined by the author_name. """
-    def get(self, request, author_name):
-        author = get_object_or_404(Author, author_name=author_name)
+    def get(self, request, display_name):
+        if request.user.is_authenticated() and \
+            request.user.author.display_name == display_name:
+                # We're looking at ourselves
+                author = request.user.author
+        else:
+            # We can only see a public profile!
+            author = get_object_or_404(Author, display_name=display_name,
+                                       privacy='public')
         context = {
             'author': author,
         }

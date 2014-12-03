@@ -4,21 +4,15 @@
 
 {% block content%}
 
-<p><a href="{% url 'home' %}">Home</a></p>
+<h1>{{ author.display_name|title }}'s Profile</h1>
 
-<h1>{{ author.user.username|title }}'s Profile</h1>
-
-<h2>Profile Details:</h2>
-
+<p>Profile privacy: {{ author.privacy }}</p>
 <p>User name: {{ author.user.username }}</p>
-<p>Display name: {{ author.author_name }}</p>
+<p>Display name: {{ author.display_name }}</p>
 <p>Full name: {{ author.user.first_name }} {{ author.user.last_name }}</p>
 <p>Website: {{ author.website }}</p>
 <p>Bio: {{ author.bio }}</p>
 <p>Email: {{ author.user.email }}</p>
-
-
-<p><a href="{% url 'home' %}">Home</a></p>
 
 {% endblock %}
 
