@@ -4,11 +4,13 @@ from django.db import models
 class Author(models.Model):
     """ Extend the User model w/ Author information. """
     user = models.OneToOneField(User)
+    author_name = models.SlugField(max_length=50, blank=True)
     website = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
 
     def __str__(self):
         return self.user.username
+
 
 FRONT_MATTER_CHOICES = [
    #('db_value', 'human readable'),
