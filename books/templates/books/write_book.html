@@ -4,8 +4,6 @@
 
 {% block content%}
 
-<p><a href="{% url 'home' %}">Home</a></p>
-
 <h1>Write Book</h1>
 
 <p>Writing <strong>{{ book.title }}</strong>
@@ -39,6 +37,7 @@
     <p>No chapters</p>
     <p><a href="{% url 'new_chapter' book.pk %}">Add Chapter</a></p>
 {% endif %}
+    <p><a href="{% url 'new_chapter' book.pk %}">Add Chapter</a></p>
 
 <hr>
 
@@ -53,6 +52,5 @@
     {% endfor %}
 {% endif %}
 
-<p><a href="{% url 'home' %}">Home</a></p>
 {% endblock %}
 

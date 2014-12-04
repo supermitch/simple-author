@@ -25,7 +25,11 @@
 {% if chapters %}
         <ul>
     {% for chapter in chapters %}
-            <li>{{ chapter.order }}. {{ chapter.name }} - Edit - Write</li>
+            <li>{{ chapter.order }}. {{ chapter.name }}
+            - <a href="{% url 'edit_chapter' chapter.pk %}">Edit</a>
+            - <a href="{% url 'write_chapter' chapter.pk %}">Write</a>
+            - <a href="{% url 'read_book' book.pk chapter.pk %}">Read</a>
+            </li>
     {% endfor %}
         </ul>
 {% else %}
@@ -40,8 +44,6 @@
     {{ back_form }}
     <input type="submit" value="Update Back Matter" />
 </form>
-
-<p><a href="{% url 'home' %}">Home</a></p>
 
 {% endblock %}
 
