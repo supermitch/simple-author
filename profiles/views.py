@@ -11,10 +11,10 @@ class ProfileView(View):
     def get(self, request, display_name):
         if request.user.is_authenticated() and \
             request.user.author.display_name == display_name:
-                # We're looking at ourselves
+                # We're looking at our own profile
                 author = request.user.author
         else:
-            # We can only see a public profile!
+            # We can only see public profiles
             author = get_object_or_404(Author, display_name=display_name,
                                        privacy='public')
         context = {
@@ -22,7 +22,7 @@ class ProfileView(View):
         }
         return render(request, 'profiles/view_profile.html', context)
 
-class EditProfileView(TemplateView):
+class EditProfileView(View):
     template_name = 'profiles/edit_profile.html'
 
     @method_decorator(login_required)
