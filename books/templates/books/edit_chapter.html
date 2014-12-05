@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Chapter {{ chapter.id }}{% endblock %}
+
+{% block content%}
+
+<h1>{{ book.title }}</h1>
+
+<h2>{{ chapter.id }}. {{ chapter.name }}</h2>
+
+<h3>Edit Chapter Settings</h2>
+
+<hr>
+
+<form action="{% url 'edit_chapter' book.pk chapter.pk %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Update Chapter" />
+</form>
+
+<hr>
+
+{% endblock %}
+

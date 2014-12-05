@@ -175,3 +175,30 @@ class WriteBookView(View):
     def dispatch(self, *args, **kwargs):
         return super(WriteBookView, self).dispatch(*args, **kwargs)
 
+class ReadChapterView(View):
+    """ Read a specific chapter. """
+    # TODO: Generalize to any part of a book
+    def get(self, request, book_pk, chapter_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        chapter = get_object_or_404(Chapter, pk=chapter_pk)
+        context = {'book': book, 'chapter': chapter}
+        return render(request, 'books/read_chapter.html', context)
+
+class WriteChapterView(View):
+    """ Read a specific chapter. """
+    # TODO: Generalize to any part of a book
+    def get(self, request, book_pk, chapter_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        chapter = get_object_or_404(Chapter, pk=chapter_pk)
+        context = {'book': book, 'chapter': chapter}
+        return render(request, 'books/write_chapter.html', context)
+
+class EditChapterView(View):
+    """ Read a specific chapter. """
+    # TODO: Generalize to any part of a book
+    def get(self, request, book_pk, chapter_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        chapter = get_object_or_404(Chapter, pk=chapter_pk)
+        context = {'book': book, 'chapter': chapter}
+        return render(request, 'books/edit_chapter.html', context)
+

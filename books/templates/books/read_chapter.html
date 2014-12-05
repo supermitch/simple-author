@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }} - Chapter {{ chapter.id }}{% endblock %}
+
+{% block content%}
+
+<h1>{{ book.title }}</h1>
+
+<h2>{{ chapter.id }}. {{ chapter.name }}</h2>
+
+<hr>
+
+<p>{{ chapter.content }}</p>
+
+<hr>
+
+{% endblock %}
+

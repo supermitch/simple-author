@@ -26,9 +26,9 @@
         <ul>
     {% for chapter in chapters %}
             <li>{{ chapter.order }}. {{ chapter.name }}
-            - <a href="{% url 'edit_chapter' chapter.pk %}">Edit</a>
-            - <a href="{% url 'write_chapter' chapter.pk %}">Write</a>
-            - <a href="{% url 'read_book' book.pk chapter.pk %}">Read</a>
+            - <a href="{% url 'edit_chapter' book.pk chapter.pk %}">Edit</a>
+            - <a href="{% url 'write_chapter' book.pk chapter.pk %}">Write</a>
+            - <a href="{% url 'read_chapter' book.pk chapter.pk %}">Read</a>
             </li>
     {% endfor %}
         </ul>
