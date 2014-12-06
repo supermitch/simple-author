@@ -2,12 +2,45 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-PRIVATE = 'private'
-PUBLIC = 'public'
-PRIVACY_CHOICES = (
+PRIVATE = 'Private'
+PUBLIC = 'Public'
+PRIVACY = (
     (PRIVATE, 'Private'),
     (PUBLIC, 'Public'),
 )
+
+FRONT_MATTER = [
+   #('db_value', 'human readable'),
+    ('Half Title', 'Half Title'),
+    ('Title Page', 'Title Page'),
+    ('Colophon', 'Colophon'),
+    ('Contents', 'Contents'),
+    ('Foreward', 'Foreward'),
+    ('Preface', 'Preface'),
+    ('Acknowledgment', 'Acknowlegment'),
+    ('Introduction', 'Introduction'),
+    ('Dedication', 'Dedication'),
+    ('Epigraph', 'Epigraph'),
+    ('Prologue', 'Prologue'),
+]
+
+BODY_MATTER = [('Chapter', 'Chapter')]
+
+BACK_MATTER = [
+    ('Epilogue', 'Epilogue'),
+    ('Afterward', 'Afterward'),
+    ('Conclusion', 'Conclusion'),
+    ('Postscript', 'Postscript'),
+    ('Appendix', 'Appendix'),
+    ('Glossary', 'Glossary'),
+    ('Bibliography', 'Bibliography'),
+    ('Index', 'Index'),
+    ('Colophon', 'Colophon'),
+]
+
+SECTIONS = FRONT_MATTER + BODY_MATTER + BACK_MATTER
+
+LOCATIONS = (('Front', 'Front'), ('Body', 'Body'), ('Back', 'Back'))
 
 
 class Author(models.Model):
@@ -16,66 +49,29 @@ class Author(models.Model):
     display_name = models.SlugField(max_length=50, blank=True, unique=True)
     website = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
-    privacy = models.CharField(max_length=10, choices=PRIVACY_CHOICES,
+    privacy = models.CharField(max_length=10, choices=PRIVACY,
                                default=PUBLIC)
 
     def __str__(self):
         return self.user.username
 
-
-FRONT_MATTER_CHOICES = [
-   #('db_value', 'human readable'),
-    ('half_title', 'Half title'),
-    ('title_page', 'Title Page'),
-    ('colophon', 'Colophon'),
-    ('contents', 'Contents'),
-    ('foreward', 'Foreward'),
-    ('preface', 'Preface'),
-    ('acknowledgment', 'Acknowlegment'),
-    ('introduction', 'Introduction'),
-    ('dedication', 'Dedication'),
-    ('epigraph', 'Epigraph'),
-    ('prologue', 'Prologue'),
-]
-
-BACK_MATTER_CHOICES = [
-    ('epilogue', 'Epilogue'),
-    ('afterward', 'Afterward'),
-    ('conclusion', 'Conclusion'),
-    ('postscript', 'Postscript'),
-    ('appendix', 'Appendix'),
-    ('glossary', 'Glossary'),
-    ('bibliography', 'Bibliography'),
-    ('index', 'Index'),
-    ('colophon', 'Colophon'),
-]
-
-SECTION_CHOICES = FRONT_MATTER_CHOICES + BACK_MATTER_CHOICES
-
 class Section(models.Model):
     """ Back and Front matter are stored here. """
-    name = models.CharField(max_length=15, choices=SECTION_CHOICES)
-    LOCATION_CHOICES = (('front', 'Front'), ('back', 'Back'))
-    order = models.IntegerField(default=0)
-    location = models.CharField(max_length=5, choices=LOCATION_CHOICES)
+    kind = models.CharField(max_length=15, choices=SECTIONS)
+    multiple = models.BooleanField(default=False)
+    initial_order = models.IntegerField(default=0)
+    location = models.CharField(max_length=5, choices=LOCATIONS)
 
     def __str__(self):
-        return self.name
+        return self.kind
 
 class Book(models.Model):
     """ A book contains everything. """
-    PRIVATE = 'private'
-    PUBLIC = 'public'
-    PRIVACY_CHOICES = (
-        (PRIVATE, 'Private'),
-        (PUBLIC, 'Public'),
-    )
     user = models.ForeignKey(User)
     title = models.CharField(max_length=200)
     url = models.SlugField(blank=True, null=True)
-    privacy = models.CharField(max_length=10, choices=PRIVACY_CHOICES,
-                               default=PUBLIC)
-    pub_date = models.DateField('date published', blank=True)
+    privacy = models.CharField(max_length=8, choices=PRIVACY, default=PUBLIC)
+    pub_date = models.DateField('Date Published', blank=True)
     description = models.CharField(max_length=200, blank=True)
     sections = models.ManyToManyField(Section, through='BookSections')
 
@@ -83,21 +79,15 @@ class Book(models.Model):
         return self.title
 
 class BookSections(models.Model):
-    """ Links Sections to Books. """
+    """ Links many Sections to each book. """
     book = models.ForeignKey(Book)
     section = models.ForeignKey(Section)
+    name = models.CharField(max_length=200, blank=True, default='')
+    order = models.IntegerField(default=0)
     content = models.TextField(blank=True, default='')
 
     class Meta:
-        unique_together = ('book', 'section')
         verbose_name_plural = 'Book Sections'
-
-class Chapter(models.Model):
-    """ A chapter is the fundamental container of content. """
-    book = models.ForeignKey(Book)
-    order = models.IntegerField(default=0)
-    name = models.CharField(max_length=200, blank=True, default='')
-    content = models.TextField(blank=True, default='')
 
     def __str__(self):
         return self.name

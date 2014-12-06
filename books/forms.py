@@ -7,14 +7,13 @@ class NewBookForm(forms.Form):
     # TODO: ModelForm?
     title = forms.CharField(label="Book title", max_length=200)
     url = forms.SlugField()
-    privacy = forms.ChoiceField(choices=models.Book.PRIVACY_CHOICES,
-                                initial=models.Book.PUBLIC)
+    privacy = forms.ChoiceField(choices=models.PRIVACY,
+                                initial=models.PUBLIC)
     # TODO: Image field for cover?
 
 class NewChapterForm(forms.ModelForm):
     """ Add a new chapter to a book. """
     class Meta:
-        model = models.Chapter
         fields = ['book', 'name', 'order']
         widgets = {'book': forms.HiddenInput()}
 
@@ -25,12 +24,12 @@ def verify_sections(CheckBoxInput):
 class SelectFrontMatterForm(forms.Form):
     sections = forms.MultipleChoiceField(required=False,
         widget=forms.CheckboxSelectMultiple,
-        choices=models.FRONT_MATTER_CHOICES,
+        choices=models.FRONT_MATTER,
         label='Front Matter')
 
 class SelectBackMatterForm(forms.Form):
     sections = forms.MultipleChoiceField(required=False,
         widget=forms.CheckboxSelectMultiple,
-        choices=models.BACK_MATTER_CHOICES,
+        choices=models.BACK_MATTER,
         label='Back Matter')
 

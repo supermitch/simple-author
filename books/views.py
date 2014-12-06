@@ -9,7 +9,7 @@ from django.views.generic import TemplateView, View
 import books.forms
 from books.forms import NewBookForm, NewChapterForm
 import books.models
-from books.models import Book, Chapter, Section, BookSections
+from books.models import Book, Section, BookSections
 
 class IndexView(View):
     """ Home page. """
@@ -29,10 +29,8 @@ class ReadBookView(View):
         book = get_object_or_404(Book, pk=book_pk)
         sections = Section.objects.filter(book=book)
         sections = BookSections.objects.filter(book=book)
-        chapters = Chapter.objects.filter(book=book).order_by('order')
         context = {
             'book': book,
-            'chapters': chapters,
             'sections': sections,
         }
         return render(request, 'books/read_book.html', context)
@@ -66,13 +64,13 @@ class NewChapterView(View):
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
         # Find our current max order value
-        max_order = Chapter.objects.filter(book_id=book_pk).aggregate(Max('order'))
+        #max_order = Chapter.objects.filter(book_id=book_pk).aggregate(Max('order'))
 
         max_order = 0 if max_order.values()[0] is None else max_order.values()[0]
         new_order = max_order + 1
         new_name = 'Chapter ' + str(new_order)
-        new_chapter = Chapter(book_id=book_pk, order=new_order, name=new_name)
-        form = NewChapterForm(instance=new_chapter)
+        #new_chapter = Chapter(book_id=book_pk, order=new_order, name=new_name)
+        #form = NewChapterForm(instance=new_chapter)
 
         context = {'book': book, 'form': form}
         return render(request, 'books/new_chapter.html', context)
@@ -93,7 +91,6 @@ class EditBookView(View):
 
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        chapters = Chapter.objects.filter(book=book).order_by('order')
 
         book_matter = book.sections.all()
 
@@ -108,7 +105,6 @@ class EditBookView(View):
             initial={'sections': initial_back_matter})
 
         context = {'book': book,
-            'chapters': chapters,
             'front_form': front_form,
             'back_form': back_form,
         }

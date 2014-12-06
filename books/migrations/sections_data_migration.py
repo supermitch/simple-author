@@ -8,39 +8,20 @@ def add_sections(apps, schema_editor):
     # Don't just use books.models.Section, that could be out of date
     Section = apps.get_model('books', 'Section')
 
-    FRONT_MATTER_CHOICES = [
-       #('db_value', 'human readable'),
-        ('half_title', 'Half title'),
-        ('title_page', 'Title Page'),
-        ('colophon', 'Colophon'),
-        ('contents', 'Contents'),
-        ('foreward', 'Foreward'),
-        ('preface', 'Preface'),
-        ('acknowledgment', 'Acknowlegment'),
-        ('introduction', 'Introduction'),
-        ('dedication', 'Dedication'),
-        ('epigraph', 'Epigraph'),
-        ('prologue', 'Prologue'),
-    ]
+    front = ['Half title', 'Title Page', 'Colophon', 'Contents', 'Foreward',
+        'Preface', 'Acknowlegment', 'Introduction', 'Dedication', 'Epigraph',
+        'Prologue']
+    body = ['Chapter']
+    back = ['Epilogue', 'Afterward', 'Conclusion',
+        'Postscript', 'Appendix', 'Glossary', 'Bibliography', 'Index',
+        'Colophon']
 
-    BACK_MATTER_CHOICES = [
-        ('epilogue', 'Epilogue'),
-        ('afterward', 'Afterward'),
-        ('conclusion', 'Conclusion'),
-        ('postscript', 'Postscript'),
-        ('appendix', 'Appendix'),
-        ('glossary', 'Glossary'),
-        ('bibliography', 'Bibliography'),
-        ('index', 'Index'),
-        ('colophon', 'Colophon'),
-    ]
-
-    for order, (sect_name, _) in enumerate(FRONT_MATTER_CHOICES):
-        sect = Section(name=sect_name, order=order, location='front')
-        sect.save()
-    for order, (sect_name, _) in enumerate(BACK_MATTER_CHOICES):
-        sect = Section(name=sect_name, order=order, location='back')
-        sect.save()
+    order = 0
+    for sections, location in [(front, 'Front'), (body, 'Body'), (back, 'Back')]:
+        for kind in sections:
+            order += 1
+            sect = Section(kind=kind, initial_order=order, location=location)
+            sect.save()
 
 def remove_sections(apps, schema_editor):
     """ Just make the migration reversible, by calling this function. """
