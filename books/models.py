@@ -71,8 +71,8 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     url = models.SlugField(blank=True, null=True)
     privacy = models.CharField(max_length=8, choices=PRIVACY, default=PUBLIC)
-    pub_date = models.DateField('Date Published', blank=True)
-    description = models.CharField(max_length=200, blank=True)
+    pub_date = models.DateField('Date Published', blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
     sections = models.ManyToManyField(Section, through='BookSections')
 
     def __str__(self):

@@ -11,9 +11,9 @@ class BookAdmin(admin.ModelAdmin):
 admin.site.register(books.models.Book, BookAdmin)
 
 class SectionAdmin(admin.ModelAdmin):
-    list_filter = ['location']
-    list_display = ('kind', 'location')
-    ordering = ['-location', ]
+    list_filter = ['location', 'multiple']
+    list_display = ('kind', 'initial_order', 'multiple', 'location')
+    ordering = ['initial_order']
 admin.site.register(books.models.Section, SectionAdmin)
 
 class BookSectionsAdmin(admin.ModelAdmin):

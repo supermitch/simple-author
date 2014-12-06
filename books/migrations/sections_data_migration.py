@@ -8,8 +8,8 @@ def add_sections(apps, schema_editor):
     # Don't just use books.models.Section, that could be out of date
     Section = apps.get_model('books', 'Section')
 
-    front = ['Half title', 'Title Page', 'Colophon', 'Contents', 'Foreward',
-        'Preface', 'Acknowlegment', 'Introduction', 'Dedication', 'Epigraph',
+    front = ['Half Title', 'Title Page', 'Colophon', 'Contents', 'Foreward',
+        'Preface', 'Acknowledgment', 'Introduction', 'Dedication', 'Epigraph',
         'Prologue']
     body = ['Chapter']
     back = ['Epilogue', 'Afterward', 'Conclusion',
