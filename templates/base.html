@@ -11,7 +11,7 @@
         <p><a href="{% url 'home' %}">Home</a>
     {% if user.is_authenticated %}
         - Logged in as <b>{{ user.username }}</b>
-        - <a href="{% url 'view_profile' user.author.display_name %}">Profile</a>
+        - <a href="{% url 'view_profile' %}">Profile</a>
         - <a href="{% url 'auth_logout' %}">Logout</a></p>
     {% else %}
         - <a href="accounts/register/">Sign Up</a>

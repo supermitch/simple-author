@@ -4,11 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import View, TemplateView
 
-from books.models import Author
+from profiles.models import Author
 
 class ProfileView(View):
     """ Display a profile defined by the author_name. """
-    def get(self, request, display_name):
+    def get(self, request, display_name=None):
         if request.user.is_authenticated() and \
             request.user.author.display_name == display_name:
                 # We're looking at our own profile

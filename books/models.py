@@ -43,18 +43,6 @@ SECTIONS = FRONT_MATTER + BODY_MATTER + BACK_MATTER
 LOCATIONS = (('Front', 'Front'), ('Body', 'Body'), ('Back', 'Back'))
 
 
-class Author(models.Model):
-    """ Extend the User model w/ Author information. """
-    user = models.OneToOneField(User)
-    display_name = models.SlugField(max_length=50, blank=True, unique=True)
-    website = models.CharField(max_length=100, blank=True)
-    bio = models.CharField(max_length=500, blank=True)
-    privacy = models.CharField(max_length=10, choices=PRIVACY,
-                               default=PUBLIC)
-
-    def __str__(self):
-        return self.user.username
-
 class Section(models.Model):
     """ Back and Front matter are stored here. """
     kind = models.CharField(max_length=15, choices=SECTIONS)
