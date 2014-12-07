@@ -60,32 +60,6 @@ class NewBookView(View):
     def dispatch(self, *args, **kwargs):
         return super(NewBookView, self).dispatch(*args, **kwargs)
 
-class NewChapterView(View):
-    def get(self, request, book_pk):
-        book = get_object_or_404(Book, pk=book_pk)
-        # Find our current max order value
-        #max_order = Chapter.objects.filter(book_id=book_pk).aggregate(Max('order'))
-
-        max_order = 0 if max_order.values()[0] is None else max_order.values()[0]
-        new_order = max_order + 1
-        new_name = 'Chapter ' + str(new_order)
-        #new_chapter = Chapter(book_id=book_pk, order=new_order, name=new_name)
-        #form = NewChapterForm(instance=new_chapter)
-
-        context = {'book': book, 'form': form}
-        return render(request, 'books/new_chapter.html', context)
-
-    def post(self, request, book_pk):
-        chapter = NewChapterForm(request.POST)
-        if chapter.is_valid():
-            chapter.save()  # Create new chapter
-            # TODO: set new order?
-            return redirect('new_chapter', book_pk=book_pk)
-        else:
-            context = {'book': book, 'form': chapter}
-            return renter(request, 'books/new_chapter.html', context)
-
-
 class EditBookView(View):
     """ Modify a book's settings and layout, but not content. """
 
@@ -171,30 +145,55 @@ class WriteBookView(View):
     def dispatch(self, *args, **kwargs):
         return super(WriteBookView, self).dispatch(*args, **kwargs)
 
-class ReadChapterView(View):
-    """ Read a specific chapter. """
-    # TODO: Generalize to any part of a book
-    def get(self, request, book_pk, chapter_pk):
+class NewSectionView(View):
+    def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        chapter = get_object_or_404(Chapter, pk=chapter_pk)
-        context = {'book': book, 'chapter': chapter}
-        return render(request, 'books/read_chapter.html', context)
+        # Find our current max order value
+        #max_order = Chapter.objects.filter(book_id=book_pk).aggregate(Max('order'))
 
-class WriteChapterView(View):
-    """ Read a specific chapter. """
-    # TODO: Generalize to any part of a book
-    def get(self, request, book_pk, chapter_pk):
-        book = get_object_or_404(Book, pk=book_pk)
-        chapter = get_object_or_404(Chapter, pk=chapter_pk)
-        context = {'book': book, 'chapter': chapter}
-        return render(request, 'books/write_chapter.html', context)
+        max_order = 0 if max_order.values()[0] is None else max_order.values()[0]
+        new_order = max_order + 1
+        new_name = 'Chapter ' + str(new_order)
+        #new_chapter = Chapter(book_id=book_pk, order=new_order, name=new_name)
+        #form = NewChapterForm(instance=new_chapter)
 
-class EditChapterView(View):
-    """ Read a specific chapter. """
+        context = {'book': book, 'form': form}
+        return render(request, 'books/new_chapter.html', context)
+
+    def post(self, request, book_pk):
+        chapter = NewChapterForm(request.POST)
+        if chapter.is_valid():
+            chapter.save()  # Create new chapter
+            # TODO: set new order?
+            return redirect('new_chapter', book_pk=book_pk)
+        else:
+            context = {'book': book, 'form': chapter}
+            return renter(request, 'books/booksection_new.html', context)
+
+class ReadSectionView(View):
+    """ Read a specific section. """
     # TODO: Generalize to any part of a book
-    def get(self, request, book_pk, chapter_pk):
+    def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        chapter = get_object_or_404(Chapter, pk=chapter_pk)
-        context = {'book': book, 'chapter': chapter}
-        return render(request, 'books/edit_chapter.html', context)
+        section = get_object_or_404(BookSection, pk=section_pk)
+        context = {'book': book, 'section': section}
+        return render(request, 'books/booksection_read.html', context)
+
+class WriteSectionView(View):
+    """ Read a specific section. """
+    # TODO: Generalize to any part of a book
+    def get(self, request, book_pk, section_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        section = get_object_or_404(BookSection, pk=section_pk)
+        context = {'book': book, 'section': section}
+        return render(request, 'books/booksection_write.html', context)
+
+class EditSectionView(View):
+    """ Read a specific section. """
+    # TODO: Generalize to any part of a book
+    def get(self, request, book_pk, section_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        section = get_object_or_404(BookSection, pk=section_pk)
+        context = {'book': book, 'section': section}
+        return render(request, 'books/booksection_edit.html', context)
 
