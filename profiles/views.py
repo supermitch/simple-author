@@ -11,7 +11,6 @@ from profiles.models import Author
 class ProfileView(View):
     """ Display a profile defined by the author_name. """
     def get(self, request, display_name=None):
-        print(display_name)
         if display_name is None:
             # If we're logged in, get our own profile
             if request.user.is_authenticated():
@@ -26,11 +25,16 @@ class ProfileView(View):
                 raise Http404
         else:
             # We can only see profiles that are public
-            print('trying..')
             author = get_object_or_404(Author, display_name=display_name,
                                        privacy=profiles.models.PUBLIC)
+
+        if request.user.is_authenticated() and request.user == author.user:
+            viewing_self = True
+        else:
+            viewing_self = False
         context = {
             'author': author,
+            'viewing_self': viewing_self,
         }
         return render(request, 'profiles/view_profile.html', context)
 

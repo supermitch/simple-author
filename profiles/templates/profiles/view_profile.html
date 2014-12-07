@@ -6,13 +6,20 @@
 
 <h1>{{ author.display_name|title }}'s Profile</h1>
 
-<p>Profile privacy: {{ author.privacy }}</p>
-<p>User name: {{ author.user.username }}</p>
+{% if viewing_self %}
+    <p><a href="{% url 'edit_profile' %}">Edit your profile</a></p>
+    <p>Profile privacy: {{ author.privacy }}</p>
+    <p>User name: {{ author.user.username }}</p>
+{% endif %}
+
 <p>Display name: {{ author.display_name }}</p>
 <p>Full name: {{ author.user.first_name }} {{ author.user.last_name }}</p>
-<p>Website: {{ author.website }}</p>
+<p>Website: <a href="{{ author.website }}">{{ author.website }}</a></p>
 <p>Bio: {{ author.bio }}</p>
-<p>Email: {{ author.user.email }}</p>
+
+{% if viewing_self or author.public_email %}
+    <p>Email: <a href="mailto:{{ author.user.email }}">{{ author.user.email }}</a></p>
+{% endif %}
 
 {% endblock %}
 
