@@ -2,6 +2,11 @@ from django import forms
 
 from books import models
 
+from django.forms.models import modelformset_factory
+
+BookSectionFormSet = modelformset_factory(models.BookSections,
+    fields=('section', 'name', 'order'))
+
 class NewBookForm(forms.Form):
     """ Add a new book. """
     # TODO: ModelForm?
@@ -11,8 +16,8 @@ class NewBookForm(forms.Form):
                                 initial=models.PUBLIC)
     # TODO: Image field for cover?
 
-class NewChapterForm(forms.ModelForm):
-    """ Add a new chapter to a book. """
+class NewSectionForm(forms.ModelForm):
+    """ Add a new section to a book. """
     class Meta:
         fields = ['book', 'name', 'order']
         widgets = {'book': forms.HiddenInput()}

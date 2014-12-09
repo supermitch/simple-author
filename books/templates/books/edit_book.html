@@ -13,37 +13,57 @@
 
 <hr>
 
-<form action="{% url 'edit_book' book.pk %}" method="post">
-    {% csrf_token %}
-    {{ front_form }}
-    <input type="submit" value="Update Front Matter" />
-</form>
-
-<hr>
-
 <h2>Chapters</h2>
-{% if chapters %}
+{% if sections %}
         <ul>
-    {% for chapter in chapters %}
-            <li>{{ chapter.order }}. {{ chapter.name }}
-            - <a href="{% url 'edit_chapter' book.pk chapter.pk %}">Edit</a>
-            - <a href="{% url 'write_chapter' book.pk chapter.pk %}">Write</a>
-            - <a href="{% url 'read_chapter' book.pk chapter.pk %}">Read</a>
+    {% for section in sections %}
+            <li>{{ section.order }}. {{ section.name }}
+            - <a href="{% url 'edit_section' book.pk section.pk %}">Edit</a>
+            - <a href="{% url 'write_section' book.pk section.pk %}">Write</a>
+            - <a href="{% url 'read_section' book.pk section.pk %}">Read</a>
             </li>
     {% endfor %}
         </ul>
 {% else %}
     <p>No chapters</p>
-    <p><a href="{% url 'new_chapter' book.pk %}">Add Chapter</a></p>
 {% endif %}
 
-<hr>
+<h2>Add a Section</h2>
+
 
 <form action="{% url 'edit_book' book.pk %}" method="post">
     {% csrf_token %}
-    {{ back_form }}
-    <input type="submit" value="Update Back Matter" />
+    {{ formset.management_form }}
+    {{ formset.non_form_errors.as_ul }}
+    <table id="formset" class="form">
+    {% for form in formset.forms %}
+      {% if forloop.first %}
+      <thead><tr>
+        {% for field in form.visible_fields %}
+        <th>{{ field.label|capfirst }}</th>
+        {% endfor %}
+      </tr></thead>
+      {% endif %}
+      <tr class="{% cycle row1,row2 %}">
+      {% for field in form.visible_fields %}
+        <td>
+        {# Include the hidden fields in the form #}
+        {% if forloop.first %}
+          {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+          {% endfor %}
+        {% endif %}
+          {{ field.errors.as_ul }}
+          {{ field }}
+        </td>
+      {% endfor %}
+      </tr>
+    {% endfor %}
+    </table>
+    <input type="submit" value="Update Sections" />
 </form>
+
+<hr>
 
 {% endblock %}
 

@@ -8,27 +8,29 @@
 
 <hr>
 
-{% for book_section in sections %}
-    {% if book_section.section.location == 'front' %}
-        <p><em>{{ book_section.section.name }}</em></p>
-        <p>{{ book_section.content }}</p>
+{% if sections %}
+    {% if display_toc %}
+        <!-- Display TOC -->
+        <ul>
+        {% for section in sections %}
+            <li><a href="{% url 'read_section' book.pk section.pk %}">{{ section.name }}</a></li>
+        {% endfor %}
+        </ul>
+
         <hr>
     {% endif %}
-{% endfor %}
 
-{% for chapter in chapters %}
-    <p><em>{{ chapter.name }}</em></p>
-    <p>{{ chapter.content }}</p>
-    <hr>
-{% endfor %}
+    {% for section in sections %}
+        <div class="section">
+            <p>{{ section.contents }}</p>
+        </div>
 
-{% for book_section in sections %}
-    {% if book_section.section.location == 'back' %}
-        <p><em>{{ book_section.section.name }}</em></p>
-        <p>{{ book_section.content }}</p>
-        <hr>
-    {% endif %}
-{% endfor %}
+    {% endfor %}
+
+{% else %}
+    <p>Book has no content!</p>
+    <p><a href="{% url 'edit_book' book.pk %}">Edit book layout</a></p>
+{% endif %}
 
 {% endblock %}
 

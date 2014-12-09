@@ -7,7 +7,6 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, View
 
 import books.forms
-from books.forms import NewBookForm, NewChapterForm
 import books.models
 from books.models import Book, Section, BookSections
 
@@ -66,22 +65,10 @@ class EditBookView(View):
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
 
-        book_matter = book.sections.all()
-
-        initial_front_matter = [section.name for section in book_matter \
-                                if section.location == 'front']
-        front_form = books.forms.SelectFrontMatterForm(
-            initial={'sections': initial_front_matter})
-
-        initial_back_matter = [section.name for section in book_matter \
-                               if section.location == 'back']
-        back_form = books.forms.SelectBackMatterForm(
-            initial={'sections': initial_back_matter})
-
-        context = {'book': book,
-            'front_form': front_form,
-            'back_form': back_form,
-        }
+        formset = books.forms.BookSectionFormSet(
+            queryset=BookSections.objects.filter(book=book),
+            initial=[{'book': book}])
+        context = {'book': book, 'formset': formset }
 
         return render(request, 'books/edit_book.html', context)
 
