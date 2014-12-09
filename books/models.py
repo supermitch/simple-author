@@ -42,6 +42,16 @@ SECTIONS = FRONT_MATTER + BODY_MATTER + BACK_MATTER
 
 LOCATIONS = (('Front', 'Front'), ('Body', 'Body'), ('Back', 'Back'))
 
+# Choices for how to display book in reading view
+SINGLE = 'Single'
+SECTION = 'Section'
+PAGE = 'Page'
+
+VIEW_MODES = [
+    (SINGLE, 'Single Page'),
+    (SECTION, 'Section View'),
+    (PAGE, 'Page View'),
+]
 
 class Section(models.Model):
     """ Back and Front matter are stored here. """
@@ -62,6 +72,9 @@ class Book(models.Model):
     pub_date = models.DateField('Date Published', blank=True, null=True)
     description = models.CharField(max_length=200, blank=True, null=True)
     sections = models.ManyToManyField(Section, through='BookSections')
+    view_mode = models.CharField(max_length=20, choices=VIEW_MODES,
+                                 default=SECTION)
+    show_toc = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
