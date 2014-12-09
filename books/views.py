@@ -27,7 +27,6 @@ class ReadBookView(View):
     #       or both options?
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        sections = Section.objects.filter(book=book)
         sections = BookSections.objects.filter(book=book)
         context = {
             'book': book,

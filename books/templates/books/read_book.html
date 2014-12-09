@@ -6,6 +6,13 @@
 
 <h1>{{ book.title }}</h1>
 
+{% if user.is_authenticated and book.user == user %}
+<p>Reading <strong>{{ book.title }}</strong>
+- <a href="{% url 'edit_book' book.pk %}">Layout</a>
+- <a href="{% url 'read_book' book.pk %}">Read</a>
+</p>
+{% endif %}
+
 <hr>
 
 {% if sections %}
@@ -13,19 +20,29 @@
         <!-- Display TOC -->
         <ul>
         {% for section in sections %}
-            <li><a href="{% url 'read_section' book.pk section.pk %}">{{ section.name }}</a></li>
+            <li>
+                {% if book.view_mode == 'Section' %}
+                    <a href="{% url 'read_section' book.pk section.pk %}">{{ section.name }}</a>
+                {% endif %}
+                {% if book.view_mode == 'Single' %}
+                    <a href="#{{ section.name }}">{{ section.name }}</a>
+                {% endif %}
+            </li>
         {% endfor %}
         </ul>
 
         <hr>
     {% endif %}
 
-    {% for section in sections %}
-        <div class="section">
-            <p>{{ section.contents }}</p>
+    {% if book.view_mode == 'Single' %}
+        {% for section in sections %}
+        <div class="section" id="{{ section.name }}">
+            <p>{{ section.content }}</p>
         </div>
+        <hr>
+        {% endfor %}
+    {% endif %}
 
-    {% endfor %}
 
 {% else %}
     <p>Book has no content!</p>
