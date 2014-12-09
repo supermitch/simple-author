@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -155,32 +156,44 @@ class NewSectionView(View):
             return redirect('new_chapter', book_pk=book_pk)
         else:
             context = {'book': book, 'form': chapter}
-            return renter(request, 'books/booksection_new.html', context)
+            return renter(request, 'books/section_new.html', context)
 
 class ReadSectionView(View):
     """ Read a specific section. """
     # TODO: Generalize to any part of a book
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        section = get_object_or_404(BookSection, pk=section_pk)
-        context = {'book': book, 'section': section}
-        return render(request, 'books/booksection_read.html', context)
+        section = get_object_or_404(BookSections, pk=section_pk)
+        sections = BookSections.objects.filter(book=book).order_by('order')
+        for index, sect in enumerate(sections):
+            if section == sect:
+                try:
+                    previous = sections[index - 1]
+                except AssertionError:
+                    previous = None
+                try:
+                    next = sections[index + 1]
+                except IndexError:
+                    next = None
+        context = {'book': book, 'section': section,
+                   'next': next, 'previous': previous}
+        return render(request, 'books/section_read.html', context)
 
 class WriteSectionView(View):
     """ Read a specific section. """
     # TODO: Generalize to any part of a book
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        section = get_object_or_404(BookSection, pk=section_pk)
+        section = get_object_or_404(BookSections, pk=section_pk)
         context = {'book': book, 'section': section}
-        return render(request, 'books/booksection_write.html', context)
+        return render(request, 'books/section_write.html', context)
 
 class EditSectionView(View):
     """ Read a specific section. """
     # TODO: Generalize to any part of a book
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        section = get_object_or_404(BookSection, pk=section_pk)
+        section = get_object_or_404(BookSections, pk=section_pk)
         context = {'book': book, 'section': section}
-        return render(request, 'books/booksection_edit.html', context)
+        return render(request, 'books/section_edit.html', context)
 

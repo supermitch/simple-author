@@ -1,18 +1,37 @@
 {% extends "base.html" %}
 
-{% block title %}{{ book.title }} - Chapter {{ chapter.id }}{% endblock %}
+{% block title %}{{ book.title }} | {{ section.name }}{% endblock %}
 
 {% block content%}
 
 <h1>{{ book.title }}</h1>
 
-<h2>{{ chapter.id }}. {{ chapter.name }}</h2>
+<h2>{{ section.name }}</h2>
+
+<p>
+{% if previous %}
+    <a href="{% url 'read_section' book.pk previous.pk %}">&lt; {{ previous.name }}</a>
+{% endif %}
+{% if previous and next %} | {% endif %}
+{% if next %}
+    <a href="{% url 'read_section' book.pk next.pk %}">{{ next.name }} &gt;</a>
+{% endif %}
+</p>
 
 <hr>
 
-<p>{{ chapter.content }}</p>
+<p>{{ section.content }}</p>
 
 <hr>
 
+<p>
+{% if previous %}
+    <a href="{% url 'read_section' book.pk previous.pk %}">&lt; {{ previous.name }}</a>
+{% endif %}
+{% if previous and next %} | {% endif %}
+{% if next %}
+    <a href="{% url 'read_section' book.pk next.pk %}">{{ next.name }} &gt;</a>
+{% endif %}
+</p>
 {% endblock %}
 
