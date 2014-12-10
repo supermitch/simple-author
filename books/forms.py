@@ -28,7 +28,6 @@ class WriteBookSectionForm(forms.ModelForm):
         model = models.BookSections
         fields = ['name', 'content']
 
-
 def verify_sections(CheckBoxInput):
     print(CheckBoxInput)
     return True

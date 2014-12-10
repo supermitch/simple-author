@@ -175,25 +175,32 @@ class NewSectionView(View):
             context = {'book': book, 'form': chapter}
             return renter(request, 'books/section_new.html', context)
 
+def get_surrounding_sections(book_pk, section_pk):
+    """ Using order to sort, try to get the previous and next sections. """
+    section_pk = int(section_pk)
+    sections = BookSections.objects.filter(book_id=book_pk).order_by('order', 'name')
+    for index, sect in enumerate(sections):
+        if sect.pk == section_pk:
+            try:
+                previous = sections[index - 1]
+            except (AssertionError, IndexError):
+                previous = None
+            try:
+                following = sections[index + 1]
+            except (AssertionError, IndexError):
+                following = None
+            return previous, following
+    return None, None
+
 class ReadSectionView(View):
     """ Read a specific section. """
     # TODO: Generalize to any part of a book
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
         section = get_object_or_404(BookSections, pk=section_pk)
-        sections = BookSections.objects.filter(book=book).order_by('order')
-        for index, sect in enumerate(sections):
-            if section == sect:
-                try:
-                    previous = sections[index - 1]
-                except AssertionError:
-                    previous = None
-                try:
-                    next = sections[index + 1]
-                except IndexError:
-                    next = None
+        previous, following = get_surrounding_sections(book_pk, section_pk)
         context = {'book': book, 'section': section,
-                   'next': next, 'previous': previous}
+                   'following': following, 'previous': previous}
         return render(request, 'books/section_read.html', context)
 
 class WriteSectionView(View):
@@ -201,10 +208,14 @@ class WriteSectionView(View):
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
         section = get_object_or_404(BookSections, pk=section_pk)
+        previous, following = get_surrounding_sections(book_pk, section_pk)
 
         form = books.forms.WriteBookSectionForm(instance=section)
 
-        context = {'book': book, 'section': section, 'form': form}
+        context = {
+            'book': book, 'section': section, 'form': form,
+            'previous': previous, 'following': following,
+        }
 
         return render(request, 'books/section_write.html', context)
 
@@ -215,11 +226,9 @@ class WriteSectionView(View):
         form = books.forms.WriteBookSectionForm(request.POST,
                                                 instance=section)
         if form.is_valid():
-            print('is valid')
-            form.save()  # Create new chapter
+            form.save()
             return redirect('write_section', book_pk=book_pk, section_pk=section_pk)
         else:
-            print('is invalid')
             context = {'book': book, 'section': section, 'form': section}
             return render(request, 'books/section_write.html', context)
 

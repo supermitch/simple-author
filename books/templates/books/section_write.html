@@ -14,6 +14,16 @@
 
 <h2>{{ section.name }}</h2>
 
+<p>
+{% if previous %}
+    &lt; <a href="{% url 'write_section' book.pk previous.pk %}">{{ previous.name }}</a> |
+{% endif %}
+{% if previous or following %} <b>{{ section.name }}</b> {% endif %}
+{% if following %}
+     | <a href="{% url 'write_section' book.pk following.pk %}">{{ following.name }}</a> &gt;
+{% endif %}
+</p>
+
 <hr>
 
 <form action="{% url 'write_section' book.pk section.pk %}" method="post">
