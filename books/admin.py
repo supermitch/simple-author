@@ -13,8 +13,9 @@ class SectionAdmin(admin.ModelAdmin):
 admin.site.register(books.models.Section, SectionAdmin)
 
 class BookSectionsAdmin(admin.ModelAdmin):
-    list_display = ('book', 'section', 'name', 'order')
-    ordering = ['book', 'section']
+    list_display = ('book', 'name', 'order', 'section')
+    list_display_links = ('book', 'name', 'section')
+    ordering = ['book', 'order', 'name']
 admin.site.register(books.models.BookSections, BookSectionsAdmin)
 
 
