@@ -1,5 +1,8 @@
 import datetime
 
+import bleach
+import markdown2
+
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db.models import Max
@@ -10,6 +13,14 @@ from django.views.generic import TemplateView, View
 import books.forms
 import books.models
 from books.models import Book, Section, BookSections
+
+# Additional bleach whitelisted HTML tags
+TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'em']
+
+def render_and_clean(content):
+    """ Convert raw data to markdown and remove JS and other BS. """
+    return bleach.clean(markdown2.markdown(content), TAGS, strip=True)
+
 
 class IndexView(View):
     """ Home page. """
@@ -27,7 +38,9 @@ class ReadBookView(View):
     #       or both options?
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        sections = BookSections.objects.filter(book=book)
+        sections = BookSections.objects.filter(book=book).order_by('order')
+        for section in sections:
+            section.display_content = render_and_clean(section.content)
         context = {
             'book': book,
             'sections': sections,
@@ -198,6 +211,8 @@ class ReadSectionView(View):
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
         section = get_object_or_404(BookSections, pk=section_pk)
+        # Convert to markdown and don't let them hack the planet
+        section.display_content = render_and_clean(section.content)
         previous, following = get_surrounding_sections(book_pk, section_pk)
         context = {'book': book, 'section': section,
                    'following': following, 'previous': previous}

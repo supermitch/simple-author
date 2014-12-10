@@ -12,15 +12,19 @@
 {% if previous %}
     <a href="{% url 'read_section' book.pk previous.pk %}">&lt; {{ previous.name }}</a>
 {% endif %}
-{% if previous and next %} | {% endif %}
-{% if next %}
-    <a href="{% url 'read_section' book.pk next.pk %}">{{ next.name }} &gt;</a>
+{% if previous and following %} | {% endif %}
+{% if following %}
+    <a href="{% url 'read_section' book.pk following.pk %}">{{ following.name }} &gt;</a>
 {% endif %}
 </p>
 
 <hr>
 
-<p>{{ section.content }}</p>
+{% if section.display_content %}
+    <p>{{ section.display_content|safe|linebreaksbr }}</p>
+{% else %}
+    <p>{{ section.content }}</p>
+{% endif %}
 
 <hr>
 
@@ -28,9 +32,9 @@
 {% if previous %}
     <a href="{% url 'read_section' book.pk previous.pk %}">&lt; {{ previous.name }}</a>
 {% endif %}
-{% if previous and next %} | {% endif %}
-{% if next %}
-    <a href="{% url 'read_section' book.pk next.pk %}">{{ next.name }} &gt;</a>
+{% if previous and following %} | {% endif %}
+{% if following %}
+    <a href="{% url 'read_section' book.pk following.pk %}">{{ following.name }} &gt;</a>
 {% endif %}
 </p>
 {% endblock %}

@@ -37,7 +37,11 @@
     {% if book.view_mode == 'Single' %}
         {% for section in sections %}
         <div class="section" id="{{ section.name }}">
-            <p>{{ section.content }}</p>
+            {% if section.display_content %}
+                <p>{{ section.display_content|safe|linebreaksbr }}</p>
+            {% else %}
+                <p>{{ section.content|linebreaksbr }}</a>
+            {% endif %}
         </div>
         <hr>
         {% endfor %}
