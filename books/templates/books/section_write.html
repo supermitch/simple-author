@@ -1,21 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}{{ book.title }} - Chapter {{ chapter.id }}{% endblock %}
+{% block title %}{{ book.title }} - {{ section.name }}{% endblock %}
 
 {% block content%}
 
 <h1>{{ book.title }}</h1>
 
-<h2>{{ chapter.id }}. {{ chapter.name }}</h2>
+<p>Writing <strong>{{ book.title }}</strong>
+- <a href="{% url 'edit_book' book.pk %}">Layout</a>
+- <a href="{% url 'read_book' book.pk %}">Read</a>
+- <a href="{% url 'write_book' book.pk %}">Write</a>
+</p>
 
-<h3>Write Chapter Content</h3>
+<h2>{{ section.name }}</h2>
 
 <hr>
 
-<form action="{% url 'write_chapter' book.pk chapter.pk %}" method="post">
+<form action="{% url 'write_section' book.pk section.pk %}" method="post">
     {% csrf_token %}
+    <table>
     {{ form }}
-    <input type="submit" value="Update Chapter" />
+    <tr>
+        <td></td>
+        <td><input type="submit" value="Update Content" /></td>
+    </tr>
+    </table>
 </form>
 
 

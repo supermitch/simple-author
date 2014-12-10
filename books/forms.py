@@ -22,6 +22,13 @@ class NewSectionForm(forms.ModelForm):
         fields = ['book', 'name', 'order']
         widgets = {'book': forms.HiddenInput()}
 
+class WriteBookSectionForm(forms.ModelForm):
+    """ Writing content requires a form. """
+    class Meta:
+        model = models.BookSections
+        fields = ['name', 'content']
+
+
 def verify_sections(CheckBoxInput):
     print(CheckBoxInput)
     return True

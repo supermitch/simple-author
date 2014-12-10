@@ -123,14 +123,32 @@ class WriteBookView(View):
     """ Modify a book's contents. """
     def get(self, request, book_pk):
         book = get_object_or_404(Book, pk=book_pk)
-        chapters = Chapter.objects.filter(book=book).order_by('order')
-        sections = book.sections.all()
-        context = {'book': book, 'chapters': chapters, 'sections': sections}
+        sections = BookSections.objects.filter(book=book).order_by('order')
+        context = {'book': book, 'sections': sections}
         return render(request, 'books/write_book.html', context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(WriteBookView, self).dispatch(*args, **kwargs)
+
+class NewChapterView(View):
+    """ Automagically add a new chapter to a book. """
+    def get(self, request, book_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        section = Section.objects.get(kind='Chapter')
+
+        agg = BookSections.objects.filter(book=book, section__kind='Chapter').aggregate(Max('order'))
+        try:
+            order = agg['order__max'] + 1
+        except TypeError:  # 'order__max' is None
+            order = 1
+        count = BookSections.objects.filter(book=book, section__kind='Chapter').count()
+        name = 'Chapter ' + str(count + 1)
+        chapter = BookSections(book=book, section=section, name=name,
+                               order=order, content='')
+        chapter.save()
+        return redirect('write_book', book_pk)
+
 
 class NewSectionView(View):
     def get(self, request, book_pk):
@@ -180,12 +198,30 @@ class ReadSectionView(View):
 
 class WriteSectionView(View):
     """ Read a specific section. """
-    # TODO: Generalize to any part of a book
     def get(self, request, book_pk, section_pk):
         book = get_object_or_404(Book, pk=book_pk)
         section = get_object_or_404(BookSections, pk=section_pk)
-        context = {'book': book, 'section': section}
+
+        form = books.forms.WriteBookSectionForm(instance=section)
+
+        context = {'book': book, 'section': section, 'form': form}
+
         return render(request, 'books/section_write.html', context)
+
+    def post(self, request, book_pk, section_pk):
+        book = get_object_or_404(Book, pk=book_pk)
+        section = get_object_or_404(BookSections, pk=section_pk)
+
+        form = books.forms.WriteBookSectionForm(request.POST,
+                                                instance=section)
+        if form.is_valid():
+            print('is valid')
+            form.save()  # Create new chapter
+            return redirect('write_section', book_pk=book_pk, section_pk=section_pk)
+        else:
+            print('is invalid')
+            context = {'book': book, 'section': section, 'form': section}
+            return render(request, 'books/section_write.html', context)
 
 class EditSectionView(View):
     """ Read a specific section. """
