@@ -50,11 +50,11 @@ class ReadBookView(View):
 class NewBookView(View):
     """ Page with a form to create a new book. """
     def get(self, request):
-        context = {'form': NewBookForm()}
+        context = {'form': books.forms.NewBookForm()}
         return render(request, 'books/new_book.html', context)
 
     def post(self, request):
-        form = NewBookForm(request.POST)
+        form = books.forms.NewBookForm(request.POST)
         if form.is_valid():
             # TODO: ModelForm?
             new_book = Book(user=request.user,

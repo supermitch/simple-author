@@ -10,7 +10,7 @@
 
     {% if user.is_authenticated %}
 
-    <p><a href="new/">Add New Book</a></p>
+    <p><a href="{% url 'new_book' %}">Add New Book</a></p>
 
         {% if books %}
 
